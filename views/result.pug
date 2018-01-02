@@ -1,0 +1,69 @@
+extends layout
+
+block morescripts
+    //script.
+      $(document).ready(() => {
+        let socket = io();
+        let progressbar = $('#progressbar');
+        console.log(socket);
+        socket.on('percent', function(percent){
+          console.log(percent);
+          $('#progressbar').css('width', 70+'%');
+          $('#progressbar').text(70+'%');
+        });
+      });
+
+block content
+  .wrapper
+    .header(style='text-align: center;')
+      if(message)
+        p(style='font-size: 24px; color: red;')= message.errorMessage
+    .content
+      .formContent(style='text-align: center;')
+        .leftGraph(style='margin: 15px auto;')
+          .leftGraphData.graphData
+            p= fileNames[0]
+            if(data)
+              p Csúcsok száma: #{data[0].settings.nodeNum}
+              p= nodeNums[0]
+              p(style='margin-bottom: 0;') Élek: #{data[0].edges.length}
+              each edge in data[0].edges
+                p(style='margin: 0; padding: 0;') #{edge.nodeFrom} - #{edge.nodeTo}
+              p(style='margin-bottom: 0;') Mátrix:
+              .matrix
+                each row, value in matrix[0]
+                  p(style='margin: 0; padding: 0')
+                    each char in row
+                      if(char=='0')
+                        span(style='padding: 2px; background-color: pink; color: gray;')  #{char}
+                      else
+                        span(style='padding: 2px;')  #{char}
+        .rightGraph(style='margin: 15px auto;')
+          .rightGraphData.graphData
+            p= fileNames[1]
+            if(data)
+              p Csúcsok száma: #{data[1].settings.nodeNum}
+              p= nodeNums[1]
+              p(style='margin-bottom: 0;') Élek: #{data[1].edges.length}
+              each edge in data[1].edges
+                p(style='margin: 0; padding: 0;') #{edge.nodeFrom} - #{edge.nodeTo}
+              p(style='margin-bottom: 0;') Mátrix:
+              .matrix
+                each row, value in matrix[1]
+                  p(style='margin: 0; padding: 0')
+                    each char in row
+                      if(char=='0')
+                        span(style='padding: 2px; background-color: pink; color: gray;')  #{char}
+                      else
+                        span(style='padding: 2px;')  #{char}
+        .bottomRow
+          .progress(style='width: 50%; margin: 15px auto;')
+            .progress-bar(id='progressbar', role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100', style='width: 0%')
+              span.sr-only 70% Complete
+          if(data)
+            if(izomorf == true)
+              p Izomorf.
+            else
+              p Nem Izomorf.
+          a(href='/')
+            input(type='button', value='Újratölt')

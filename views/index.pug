@@ -1,0 +1,16 @@
+extends layout
+
+block morescripts
+
+block content
+  .wrapper
+    .header(style='text-align: center;')
+    .content
+      form(action='isomorphism', method='POST', encType='multipart/form-data')
+        .formContent(style='text-align: center;')
+          .leftGraph(style='margin: 15px auto;')
+            input(type='file', name='leftGraph')
+          .rightGraph(style='margin: 15px auto;')
+            input(type='file', name='rightGraph')
+          .bottomRow
+            input(type='submit', value='Elküld')

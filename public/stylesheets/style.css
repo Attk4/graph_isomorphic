@@ -1,0 +1,25 @@
+.wrapper {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.formContent {
+  display: grid;
+  grid-template-columns: 250px 1fr 1fr 250px;
+  grid-template-rows: 1fr 100px;
+}
+
+.leftGraph {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+.rightGraph {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+}
+
+.bottomRow {
+  grid-column: 2 / 4;
+  grid-row: 2 / 3;
+}
