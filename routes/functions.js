@@ -1,184 +1,156 @@
-'use strict';
+const math = require('mathjs');
+const Combinatorics = require('js-combinatorics');
 
-class GraphMatcher {
-    constructor(G1, G2, nodeNums){
-        this.G1 = G1;
-        this.G2 = G2;
-        let nodes = [];
-        for(var i = 1; i <= nodeNums; i++){
-            nodes[i-1] = i;
+module.exports = {
+    isIsomorphic: function isIsomorphic(data){
+        let nodeNums1 = data[0].settings.nodeNum;
+        let nodeNums2 = data[1].settings.nodeNum;
+        if(nodeNums1 != nodeNums2) return false;
+        let data1 = data[0].edges;
+        let data2 = data[1].edges;
+        let nums1 = [];
+        let nums2 = [];
+        for(var i = 0; i<data1.length; i++){
+            nums1.push([parseInt(data1[i].nodeFrom), parseInt(data1[i].nodeTo)]);
+            nums2.push([parseInt(data2[i].nodeFrom), parseInt(data2[i].nodeTo)]);
         }
-        this.G1_nodes = nodes;
-        this.G2_nodes = nodes;
-        this.initialize();
-    }
-
-    initialize(){
-        this.core_1 = {};
-        this.core_2 = {};
-        this.inout_1 = {};
-        this.inout_2 = {};
-        this.state = new GMState();
-        this.mapping = this.core_1.copy();
-    }
-
-    candicate_pairs_iter(){
-        let G1_nodes = this.G1_nodes;
-        let G2_nodes = this.G2_nodes;
-        let T1_inout = function () {
-            let loop = [];
-            for (let node of G1_nodes) {
-                if (inContainer(node, self.inout_1) && !inContainer(node, self.core_1)) {
-                    loop.append (node);
-                }
-            }
-            return loop;
-        } ();
-        let T2_inout = function () {
-            let loop = [];
-            for (let node of G2_nodes) {
-                if (inContainer(node, self.inout_2) && !inContainer(node, self.core_2)) {
-                    loop.append (node);
-                }
-            }
-            return loop;
-        } ()
-        if(T1_inout && T2_inout){
-            for(let node in T1_inout){
-                yield tuple([node, Math.min(T2_inout)]);
-            }
-        } else if(1){
-            let other_node = Math.min(G2_nodes - this.core_2);
-            for(let node of this.G1){
-                if(!inContainer(node, this.core_1)){
-                    yield tuple([node, other_node]);
-                }
-            }
+        let numbers1 = [];
+        let numbers2 = [];
+        for(var i = 1; i <= nodeNums1; i++){
+            numbers1.push(getDegree(i, nums1));
+            numbers2.push(getDegree(i, nums2));    
         }
-    }
-    match(){
-        if(this.core_1.length == this.G2.length){
-            this.mapping = this.core_1.copy();
-            yield this.mapping;
-        } else {
-            for(let [G1_node, G2_node] of this.candicate_pairs_iter()){
-                if(this.syntactic_feasibility(G1_node, G2_node)){
-                    newstate = this.state(G1_node, G2_node);
-                    for(let mapping of this.match()){
-                        yield mapping;
-                    }
-                }
-            }
-        }
+        let sorted1 = numbers1.sort();
+        let sorted2 = numbers2.sort();
+        if(!arraysEqual(sorted1, sorted2)) return false;
+        let eredmeny = doMath(nums1, nums2, nodeNums1);
+        return [eredmeny[0], eredmeny[1], eredmeny[2], sorted1, sorted2]
     }
 }
 
-class GMState {
-    constructor(GM){
-        this.GM = GM;
-        this.G1_node = null;
-        this.G2_node = null;
-        this.depth = GM.core_1.length;
-
-        if(G1_node == null || G2_node == null){
-            GM.core_1 = {};
-            GM.core_2 = {};
-            GM.inout_1 = {};
-            GM.inout_2 = {};
-        }
-        if(G1_node != null && G2_node != null){
-            GM.core_1[G1_node] = G2_node;
-            GM.core_2[G2_node] = G1_node;
-            this.G1_node = G1_node;
-            this.G2_node = G2_node;
-            this.depth = GM.core_1.length;
-            if(!inContainer(G1_node, GM.inout_1)){
-                GM.inout_1[G1_node] = this.depth;
-            }
-            if(!inContainer(G2_node, GM.inout_2)){
-                GM.inout_2[G2_node] = this.depth;
-            }
-        }
-        
-        let new_nodes = [];
-        for(let node of GM.core_1){
-            new_nodes.py_update(function(){
-                var loop = [];
-                for(var neighbor of GM.G1[node]){
-                    if(!inContainer(neighbor,GM.core_1)){
-                        loop.push(neighbor);
-                    }
-                }
-                return loop;
-            }());
-        }
-        for(let node of new_nodes){
-            if(!inContainer(node, GM.inout_1)){
-                GM.inout_1[node] = this.depth;
-            }
-        }
-
-        let new_nodes = [];
-        for(let node of GM.core_2){
-            new_nodes.py_update(function(){
-                var loop = [];
-                for(var neighbor of GM.G2[node]){
-                    if(!inContainer(neighbor,GM.core_2)){
-                        loop.push(neighbor);
-                    }
-                }
-                return loop;
-            }());
-        }
-        for(let node of new_nodes){
-            if(!inContainer(node, GM.inout_2)){
-                GM.inout_2[node] = this.depth;
-            }
-        }
+function doMath(nums1, nums2, nodeNums){
+    let A1 = getMatrixUD(nums1, nodeNums);
+    let A2 = getMatrixUD(nums2, nodeNums);
+    let P = math.eye(parseInt(nodeNums))._data;
+    if(arrEqual(A1, A2)){
+        return [true, A1, A2];
+    } else {
+        let isIsom = doLoop(A1, A2, nodeNums, P);
+        return [isIsom, A1, A2];
     }
 }
 
-
-/*function tuple (iterable) {
-    var instance = iterable ? [] .slice.apply (iterable) : [];
-    return instance;
-}*/
-
-function copy (anObject) {
-    if (anObject == null || typeof anObject == "object") {
-        return anObject;
-    }
-    else {
-        var result = {};
-        for (var attrib in obj) {
-            if (anObject.hasOwnProperty (attrib)) {
-                result [attrib] = anObject [attrib];
-            }
+function doLoop(matrix1, matrix2, nodeNums, P){
+    let cmb = Combinatorics.permutation(P);
+    let arr = cmb.toArray();
+    console.log(arr);
+    for(let i = 0; i < arr.length; i++){
+        console.log(((i / arr.length)*100).toFixed(2) + "%");
+        if(arrEqual(matrix1, math.multiply(math.multiply(arr[i], matrix2), math.transpose(arr[i])))){
+        console.log("100.00%");
+        return true;
         }
-        return result;
     }
+    console.log("100.00%");
+    return false;
 }
 
-function inContainer(element, container) {
-    return (
-        container.indexOf ?                 // If it has an indexOf
-        container.indexOf (element) > -1 :  // it's an array or a string,
-        container.hasOwnProperty (element)  // else it's a plain, non-dict JavaScript object
-    );
-};
+function getNeighborUD(nodeNums, nums){
+    let o = [];
+    for(var i = 0; i < nodeNums; i++){
+        let arr = [];
+        for(var j = 0; j < nums.length; j++){
+        if(nums[j][0] == (i+1)){
+            arr.push(nums[j][1]);
+        }
+        if(nums[j][1] == (i+1)){
+            arr.push(nums[j][0]);
+        }
+        }
+        o.push(arr.sort());
+    }
+    return o;
+}
 
-Array.prototype.py_update = function () {   // O (n)
-    var updated = [] .concat.apply (this.slice (), arguments) .sort ();
-    this.py_clear ();
-    for (var i = 0; i < updated.length; i++) {
-        if (updated [i] != updated [i - 1]) {
-            this.push (updated [i]);
+function getNeighborD(nodeNums, nums){
+    let o = [];
+    for(var i = 0; i < nodeNums; i++){
+        let arr = [];
+        for(var j = 0; j < nums.length; j++){
+        if(nums[j][0] == (i+1)){
+            arr.push(nums[j][1]);
+        }
+        }
+        o.push(arr.sort());
+    }
+    return o;
+}
+
+function getMatrixD(nums, nodeNums){
+    let matrix = [];
+    for(var i = 0; i < nodeNums; i++){
+        matrix[i] = new Array(parseInt(nodeNums));
+        for(var j = 0; j < nodeNums; j++){
+        matrix[i][j] = 0;
         }
     }
-};
+    for(var i = 0; i < nums.length; i++){
+        let origin = nums[i][0]-1;
+        let destin = nums[i][1]-1;
+        matrix[origin][destin] = 1;
+    }
+    return matrix;
+}
 
-Array.prototype.py_clear = function () {
-    this.length = 0;
-};
+function getMatrixUD(nums, nodeNums){
+    let matrix = [];
+    for(var i = 0; i < nodeNums; i++){
+        matrix[i] = new Array(parseInt(nodeNums));
+        for(var j = 0; j < nodeNums; j++){
+        matrix[i][j] = 0;
+        }
+    }
+    for(var i = 0; i < nums.length; i++){
+        let origin = nums[i][0]-1;
+        let destin = nums[i][1]-1;
+        matrix[origin][destin] = 1;
+        matrix[destin][origin] = 1;
+    }
+    return matrix;
+}
 
-module.exports.GraphMatcher = GraphMatcher;
+function getDegree(iterate, nums){
+    let darab = 0;
+    for(var i = 0; i < nums.length; i++){
+        if(nums[i][0] == iterate || nums[i][1] == iterate){
+        darab++;
+        }
+    }
+    return darab;
+}
+
+function arraysEqual(array1, array2){
+    if(array1.length !== array2.length) return false;
+    for(var i = array1.length; i--;){
+        if(array1[i] !== array2[i]) return false;
+    }
+    return true;
+}
+
+function arrEqual(array1, array2){
+    if (!Array.isArray(array1) && !Array.isArray(array2)) {
+        return array1 === array2;
+    }
+
+    if (array1.length !== array2.length) {
+        return false;
+    }
+
+    for (var i = 0, len = array1.length; i < len; i++) {
+        if (!arrEqual(array1[i], array2[i])) {
+        return false;
+        }
+    }
+
+    return true;
+}
