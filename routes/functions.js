@@ -24,7 +24,7 @@ module.exports = {
         let sorted2 = numbers2.sort();
         if(!arraysEqual(sorted1, sorted2)) return false;
         let eredmeny = doMath(nums1, nums2, nodeNums1);
-        return [eredmeny[0], eredmeny[1], eredmeny[2], sorted1, sorted2]
+        return [data, eredmeny[0], eredmeny[1], eredmeny[2], sorted1, sorted2]
     }
 }
 

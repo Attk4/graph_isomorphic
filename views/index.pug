@@ -4,13 +4,40 @@ block morescripts
 
 block content
   .wrapper
-    .header(style='text-align: center;')
+    .header
+      h1 Graph Isomorphism Checker
+      h2= error
     .content
+      .help
+        h3 File Example
+        h4 Standard DIMACS format
+        .example
+          p c Comment line 1
+          p c Comment line 2
+          p p edge nodeNumber edgeNumber 
+          p e fromNode toNode
+          p e fromNode toNode
+          p e fromNode toNode
+      .examples
+        h4 Example Files
+        .exampleFiles
+          p Isomorphic pair
+          a(href='graphs/graph_test1.dimacs', target='_blank') graph_test1.dimacs
+          a(href='graphs/graph_test2.dimacs', target='_blank') graph_test2.dimacs
+          p Not isomorphic pair
+          a(href='graphs/graph_test3.dimacs', target='_blank') graph_test3.dimacs
+          a(href='graphs/graph_test4.dimacs', target='_blank') graph_test4.dimacs
+          p Isomorphic pair
+          a(href='graphs/graph_test5.dimacs', target='_blank') graph_test5.dimacs
+          a(href='graphs/graph_test6.dimacs', target='_blank') graph_test6.dimacs
+          p Not isomorphic pair
+          a(href='graphs/graph_test7.dimacs', target='_blank') graph_test7.dimacs
+          a(href='graphs/graph_test8.dimacs', target='_blank') graph_test8.dimacs
       form(action='isomorphism', method='POST', encType='multipart/form-data')
-        .formContent(style='text-align: center;')
-          .leftGraph(style='margin: 15px auto;')
+        .formContent
+          .leftGraph
             input(type='file', name='leftGraph')
-          .rightGraph(style='margin: 15px auto;')
+          .rightGraph
             input(type='file', name='rightGraph')
           .bottomRow
-            input(type='submit', value='Elküld')
+            input(type='submit', value='Run Test')

@@ -2,20 +2,19 @@ extends layout
 
 block content
   .wrapper
-    .header(style='text-align: center;')
-      if(message)
-        p(style='font-size: 24px; color: red;')= message.errorMessage
+    .header
+      h1 Graph Isomorphism Checker
     .content
-      form(action='', method='POST', encType='multipart/form-data')
-        .formContent(style='text-align: center;')
-          .leftGraph
-            input(type='file', name='leftGraph')
-            .leftGraphData.graphData
-              p= fileNames[0]
-          .rightGraph
-            input(type='file', name='rightGraph')
-            .rightGraphData.graphData
-              p= fileNames[1]
-          .bottomRow
-            p= izomorf
-            input(type='submit', value='Elküld')
+      .formContent
+        .leftGraph
+          input(type='file', name='leftGraph')
+          .leftGraphData.graphData
+            p= fileNames[0]
+        .rightGraph
+          input(type='file', name='rightGraph')
+          .rightGraphData.graphData
+            p= fileNames[1]
+        .bottomRow
+          p= izomorf
+          a(href='/')
+            input(type='button', value='Reload')

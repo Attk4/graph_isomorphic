@@ -23,3 +23,46 @@
   grid-column: 2 / 4;
   grid-row: 2 / 3;
 }
+
+.header {
+  text-align: center;
+}
+
+.header h2 {
+  color: red;
+}
+
+.help {
+  text-align: center;
+  width: 20%;
+  margin: 0 auto;
+}
+
+.example {
+  text-align: left;
+}
+
+.example p {
+  margin: 0;
+}
+
+.formContent {
+  text-align: center;
+}
+
+.leftGraph, .rightGraph {
+  margin: 15px auto;
+}
+
+.examples {
+  text-align: center;
+}
+
+.exampleFiles p {
+  margin: 10px 0 0 0;
+}
+
+.exampleFiles a {
+  margin: 0 3px;
+  padding: 0 5px;
+}
