@@ -87,7 +87,7 @@ router.post('/isomorphism', (req, res) => {
           let isIsomorphic = izomorf[1];
           let matrixes = [izomorf[2], izomorf[3]];
           let edgeNumbers = [izomorf[4], izomorf[5]];
-          if(izomorf) res.render('result', {data: data, izomorf: isIsomorphic, matrix: matrixes, edgeNumbers: edgeNumbers, fileNames: [req.session.leftGraph, req.session.rightGraph], title: 'Graph Isomorphism'});
+          if(isIsomorphic) res.render('result', {data: data, izomorf: isIsomorphic, matrix: matrixes, edgeNumbers: edgeNumbers, fileNames: [req.session.leftGraph, req.session.rightGraph], title: 'Graph Isomorphism'});
           else res.render('nem', {izomorf: 'Not isomorphic.', fileNames: [req.session.leftGraph, req.session.rightGraph], title: 'Graph Isomorphism'});
         });
       });
