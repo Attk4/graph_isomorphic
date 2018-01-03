@@ -8,7 +8,7 @@ const flash = require('connect-flash');
 const app = express();
 const http = require('http').Server(app);
 const session = require('express-session');
-const io = require('socket.io')(http);
+global.io = require('socket.io')(http);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -27,5 +27,3 @@ app.use('/', index);
 http.listen(3000, function() {
 	console.log('Server listening on *:3000');
 });
-
-module.exports.io = io;

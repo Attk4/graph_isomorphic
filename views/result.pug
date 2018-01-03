@@ -1,18 +1,5 @@
 extends layout
 
-block morescripts
-    //script.
-      $(document).ready(() => {
-        let socket = io();
-        let progressbar = $('#progressbar');
-        console.log(socket);
-        socket.on('percent', function(percent){
-          console.log(percent);
-          $('#progressbar').css('width', 70+'%');
-          $('#progressbar').text(70+'%');
-        });
-      });
-
 block content
   .wrapper
     .header
@@ -56,9 +43,6 @@ block content
                       else
                         span(style='padding: 2px;')  #{char}
         .bottomRow
-          .progress(style='width: 50%; margin: 15px auto;').hidden
-            .progress-bar(id='progressbar', role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100', style='width: 0%')
-              span.sr-only 70% Complete
           if(data)
             if(izomorf == true)
               p Isomorphic.

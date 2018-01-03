@@ -2,21 +2,17 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const readline = require('readline-promise');
-const _ = require('lodash');
 const fileUpload = require('express-fileupload');
 const moment = require('moment');
 moment.locale('hu');
-const io = require('../app').io;
 const functions = require('./functions');
 
 router.use(fileUpload());
 
-router.get('/', (req, res) => {
-  console.log(req.session);
+router.get('/', (req, res) => { 
   if(req.session.leftGraph) req.session.leftGraph = '';
   if(req.session.rightGraph) req.session.rightGraph = '';
   if(req.session.data) req.session.data = [];
-  console.log(req.session);
   if(!req.session.error) req.session.error = '';
   res.render('index', {title: 'Graph Isomorphism', error: req.session.error});
 });
@@ -31,6 +27,8 @@ router.post('/isomorphism', (req, res) => {
   } else if(!req.files.rightGraph) {
     req.session.error = 'The right graph is Empty!'
     res.redirect('back');
+  } else {
+    req.session.error = '';
   }
   req.session.data = [{
     comments: [],

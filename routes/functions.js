@@ -1,5 +1,10 @@
+const express = require('express');
+const router = express.Router();
 const math = require('mathjs');
 const Combinatorics = require('js-combinatorics');
+const _ = require('lodash');
+
+io.emit('percent', {'percent': 15});
 
 module.exports = {
     isIsomorphic: function isIsomorphic(data){
@@ -29,30 +34,24 @@ module.exports = {
 }
 
 function doMath(nums1, nums2, nodeNums){
-    let A1 = getMatrixUD(nums1, nodeNums);
-    let A2 = getMatrixUD(nums2, nodeNums);
+    let matrix1 = getMatrixUD(nums1, nodeNums);
+    let matrix2 = getMatrixUD(nums2, nodeNums);
     let P = math.eye(parseInt(nodeNums))._data;
-    if(arrEqual(A1, A2)){
-        return [true, A1, A2];
+    if(arrEqual(matrix1, matrix2)){
+        return [true, matrix1,matrix2A2];
     } else {
-        let isIsom = doLoop(A1, A2, nodeNums, P);
-        return [isIsom, A1, A2];
-    }
-}
-
-function doLoop(matrix1, matrix2, nodeNums, P){
-    let cmb = Combinatorics.permutation(P);
-    let arr = cmb.toArray();
-    console.log(arr);
-    for(let i = 0; i < arr.length; i++){
-        console.log(((i / arr.length)*100).toFixed(2) + "%");
-        if(arrEqual(matrix1, math.multiply(math.multiply(arr[i], matrix2), math.transpose(arr[i])))){
-        console.log("100.00%");
-        return true;
+        let cmb = Combinatorics.permutation(P);
+        let arr = cmb.toArray();
+        for(let i = 0; i < arr.length; i++){
+            console.log(((i / arr.length)*100).toFixed(2) + "%");
+            if(arrEqual(matrix1, math.multiply(math.multiply(arr[i], matrix2), math.transpose(arr[i])))){
+                console.log("100.00%");
+                return [true, matrix1, matrix2];
+            }
         }
+        console.log("100.00%");
+        return [false, matrix1, matrix2];
     }
-    console.log("100.00%");
-    return false;
 }
 
 function getNeighborUD(nodeNums, nums){
@@ -60,12 +59,12 @@ function getNeighborUD(nodeNums, nums){
     for(var i = 0; i < nodeNums; i++){
         let arr = [];
         for(var j = 0; j < nums.length; j++){
-        if(nums[j][0] == (i+1)){
-            arr.push(nums[j][1]);
-        }
-        if(nums[j][1] == (i+1)){
-            arr.push(nums[j][0]);
-        }
+            if(nums[j][0] == (i+1)){
+                arr.push(nums[j][1]);
+            }
+            if(nums[j][1] == (i+1)){
+                arr.push(nums[j][0]);
+            }
         }
         o.push(arr.sort());
     }
@@ -77,9 +76,9 @@ function getNeighborD(nodeNums, nums){
     for(var i = 0; i < nodeNums; i++){
         let arr = [];
         for(var j = 0; j < nums.length; j++){
-        if(nums[j][0] == (i+1)){
-            arr.push(nums[j][1]);
-        }
+            if(nums[j][0] == (i+1)){
+                arr.push(nums[j][1]);
+            }
         }
         o.push(arr.sort());
     }
@@ -91,7 +90,7 @@ function getMatrixD(nums, nodeNums){
     for(var i = 0; i < nodeNums; i++){
         matrix[i] = new Array(parseInt(nodeNums));
         for(var j = 0; j < nodeNums; j++){
-        matrix[i][j] = 0;
+            matrix[i][j] = 0;
         }
     }
     for(var i = 0; i < nums.length; i++){
@@ -107,7 +106,7 @@ function getMatrixUD(nums, nodeNums){
     for(var i = 0; i < nodeNums; i++){
         matrix[i] = new Array(parseInt(nodeNums));
         for(var j = 0; j < nodeNums; j++){
-        matrix[i][j] = 0;
+            matrix[i][j] = 0;
         }
     }
     for(var i = 0; i < nums.length; i++){
@@ -123,7 +122,7 @@ function getDegree(iterate, nums){
     let darab = 0;
     for(var i = 0; i < nums.length; i++){
         if(nums[i][0] == iterate || nums[i][1] == iterate){
-        darab++;
+            darab++;
         }
     }
     return darab;
@@ -148,7 +147,7 @@ function arrEqual(array1, array2){
 
     for (var i = 0, len = array1.length; i < len; i++) {
         if (!arrEqual(array1[i], array2[i])) {
-        return false;
+            return false;
         }
     }
 
