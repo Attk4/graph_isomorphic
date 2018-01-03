@@ -16,13 +16,13 @@ module.exports = {
         let data2 = data[1].edges;
         let nums1 = [];
         let nums2 = [];
-        for(var i = 0; i<data1.length; i++){
+        for(let i = 0; i<data1.length; i++){
             nums1.push([parseInt(data1[i].nodeFrom), parseInt(data1[i].nodeTo)]);
             nums2.push([parseInt(data2[i].nodeFrom), parseInt(data2[i].nodeTo)]);
         }
         let numbers1 = [];
         let numbers2 = [];
-        for(var i = 1; i <= nodeNums1; i++){
+        for(let i = 1; i <= nodeNums1; i++){
             numbers1.push(getDegree(i, nums1));
             numbers2.push(getDegree(i, nums2));    
         }
@@ -57,9 +57,9 @@ function doMath(nums1, nums2, nodeNums){
 
 function getNeighborUD(nodeNums, nums){
     let o = [];
-    for(var i = 0; i < nodeNums; i++){
+    for(let i = 0; i < nodeNums; i++){
         let arr = [];
-        for(var j = 0; j < nums.length; j++){
+        for(let j = 0; j < nums.length; j++){
             if(nums[j][0] == (i+1)){
                 arr.push(nums[j][1]);
             }
@@ -74,9 +74,9 @@ function getNeighborUD(nodeNums, nums){
 
 function getNeighborD(nodeNums, nums){
     let o = [];
-    for(var i = 0; i < nodeNums; i++){
+    for(let i = 0; i < nodeNums; i++){
         let arr = [];
-        for(var j = 0; j < nums.length; j++){
+        for(let j = 0; j < nums.length; j++){
             if(nums[j][0] == (i+1)){
                 arr.push(nums[j][1]);
             }
@@ -88,13 +88,13 @@ function getNeighborD(nodeNums, nums){
 
 function getMatrixUD(nums, nodeNums){
     let matrix = [];
-    for(var i = 0; i < nodeNums; i++){
+    for(let i = 0; i < nodeNums; i++){
         matrix[i] = new Array(parseInt(nodeNums));
-        for(var j = 0; j < nodeNums; j++){
+        for(let j = 0; j < nodeNums; j++){
             matrix[i][j] = 0;
         }
     }
-    for(var i = 0; i < nums.length; i++){
+    for(let i = 0; i < nums.length; i++){
         let origin = nums[i][0]-1;
         let destin = nums[i][1]-1;
         matrix[origin][destin] = 1;
@@ -105,13 +105,13 @@ function getMatrixUD(nums, nodeNums){
 
 function getMatrixD(nums, nodeNums){
     let matrix = [];
-    for(var i = 0; i < nodeNums; i++){
+    for(let i = 0; i < nodeNums; i++){
         matrix[i] = new Array(parseInt(nodeNums));
-        for(var j = 0; j < nodeNums; j++){
+        for(let j = 0; j < nodeNums; j++){
             matrix[i][j] = 0;
         }
     }
-    for(var i = 0; i < nums.length; i++){
+    for(let i = 0; i < nums.length; i++){
         let origin = nums[i][0]-1;
         let destin = nums[i][1]-1;
         matrix[origin][destin] = 1;
@@ -121,7 +121,7 @@ function getMatrixD(nums, nodeNums){
 
 function getDegree(iterate, nums){
     let darab = 0;
-    for(var i = 0; i < nums.length; i++){
+    for(let i = 0; i < nums.length; i++){
         if(nums[i][0] == iterate || nums[i][1] == iterate){
             darab++;
         }
@@ -131,7 +131,7 @@ function getDegree(iterate, nums){
 
 function arraysEqual(array1, array2){
     if(array1.length !== array2.length) return false;
-    for(var i = array1.length; i--;){
+    for(let i = array1.length; i--;){
         if(array1[i] !== array2[i]) return false;
     }
     return true;
@@ -144,7 +144,7 @@ function arrEqual(array1, array2){
     if (array1.length !== array2.length) {
         return false;
     }
-    for (var i = 0, len = array1.length; i < len; i++) {
+    for (let i = 0, len = array1.length; i < len; i++) {
         if (!arrEqual(array1[i], array2[i])) {
             return false;
         }
