@@ -54,6 +54,7 @@ router.post('/isomorphism', (req, res) => {
       }
       if(line[0] == 'p'){
         req.session.data[0].settings.nodeNum = line[2];
+        req.session.data[0].settings.edgeNum = line[3];
       }
       if(line[0] == 'e'){
         req.session.data[0].edges.push({
@@ -74,6 +75,7 @@ router.post('/isomorphism', (req, res) => {
           }
           if(line[0] == 'p'){
             req.session.data[1].settings.nodeNum = line[2];
+            req.session.data[1].settings.edgeNum = line[3];
           }
           if(line[0] == 'e'){
             req.session.data[1].edges.push({

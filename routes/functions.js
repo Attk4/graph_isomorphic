@@ -4,13 +4,14 @@ const math = require('mathjs');
 const Combinatorics = require('js-combinatorics');
 const _ = require('lodash');
 
-io.emit('percent', {'percent': 15});
-
 module.exports = {
     isIsomorphic: function isIsomorphic(data){
         let nodeNums1 = data[0].settings.nodeNum;
         let nodeNums2 = data[1].settings.nodeNum;
+        let edgeNums1 = data[0].settings.edgeNum;
+        let edgeNums2 = data[1].settings.edgeNum;
         if(nodeNums1 != nodeNums2) return false;
+        if(edgeNums1 != edgeNums2) return false;
         let data1 = data[0].edges;
         let data2 = data[1].edges;
         let nums1 = [];
@@ -38,7 +39,7 @@ function doMath(nums1, nums2, nodeNums){
     let matrix2 = getMatrixUD(nums2, nodeNums);
     let P = math.eye(parseInt(nodeNums))._data;
     if(arrEqual(matrix1, matrix2)){
-        return [true, matrix1,matrix2A2];
+        return [true, matrix1, matrix2];
     } else {
         let cmb = Combinatorics.permutation(P);
         let arr = cmb.toArray();
@@ -85,22 +86,6 @@ function getNeighborD(nodeNums, nums){
     return o;
 }
 
-function getMatrixD(nums, nodeNums){
-    let matrix = [];
-    for(var i = 0; i < nodeNums; i++){
-        matrix[i] = new Array(parseInt(nodeNums));
-        for(var j = 0; j < nodeNums; j++){
-            matrix[i][j] = 0;
-        }
-    }
-    for(var i = 0; i < nums.length; i++){
-        let origin = nums[i][0]-1;
-        let destin = nums[i][1]-1;
-        matrix[origin][destin] = 1;
-    }
-    return matrix;
-}
-
 function getMatrixUD(nums, nodeNums){
     let matrix = [];
     for(var i = 0; i < nodeNums; i++){
@@ -114,6 +99,22 @@ function getMatrixUD(nums, nodeNums){
         let destin = nums[i][1]-1;
         matrix[origin][destin] = 1;
         matrix[destin][origin] = 1;
+    }
+    return matrix;
+}
+
+function getMatrixD(nums, nodeNums){
+    let matrix = [];
+    for(var i = 0; i < nodeNums; i++){
+        matrix[i] = new Array(parseInt(nodeNums));
+        for(var j = 0; j < nodeNums; j++){
+            matrix[i][j] = 0;
+        }
+    }
+    for(var i = 0; i < nums.length; i++){
+        let origin = nums[i][0]-1;
+        let destin = nums[i][1]-1;
+        matrix[origin][destin] = 1;
     }
     return matrix;
 }
@@ -140,16 +141,13 @@ function arrEqual(array1, array2){
     if (!Array.isArray(array1) && !Array.isArray(array2)) {
         return array1 === array2;
     }
-
     if (array1.length !== array2.length) {
         return false;
     }
-
     for (var i = 0, len = array1.length; i < len; i++) {
         if (!arrEqual(array1[i], array2[i])) {
             return false;
         }
     }
-
     return true;
 }
